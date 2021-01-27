@@ -1,0 +1,12 @@
+##  .gitignore
+##  - repo: git@github.intra.douban.com:Market/freyr.git
+
+*~
+*#
+.#*
+#*
+
+*.py[cod]
+.*~
+.DS_Store
+.idea
