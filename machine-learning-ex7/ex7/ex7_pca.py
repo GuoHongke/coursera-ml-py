@@ -27,10 +27,11 @@ data = scio.loadmat('ex7data1.mat')
 X = data['X']
 
 # Visualize the example dataset
-plt.figure()
-plt.scatter(X[:, 0], X[:, 1], facecolors='none', edgecolors='b', s=20)
-plt.axis('equal')
-plt.axis([0.5, 6.5, 2, 8])
+# plt.figure()
+# plt.scatter(X[:, 0], X[:, 1], facecolors='none', edgecolors='b', s=20)
+# plt.axis('equal')
+# plt.axis([0.5, 6.5, 2, 8])
+# plt.show()
 
 input('Program paused. Press ENTER to continue')
 
@@ -46,9 +47,9 @@ X_norm, mu, sigma = fn.feature_normalize(X)
 # Run PCA
 U, S = pca.pca(X_norm)
 
-rk.draw_line(mu, mu + 1.5 * S[0] * U[:, 0])
-rk.draw_line(mu, mu + 1.5 * S[1] * U[:, 1])
-
+# rk.draw_line(mu, mu + 1.5 * S[0] * U[:, 0])
+# rk.draw_line(mu, mu + 1.5 * S[1] * U[:, 1])
+# plt.show()
 print('Top eigenvector: \nU[:, 0] = {}'.format(U[:, 0]))
 print('You should expect to see [-0.707107 -0.707107]')
 
@@ -69,7 +70,7 @@ plt.figure()
 plt.scatter(X_norm[:, 0], X_norm[:, 1], facecolors='none', edgecolors='b', s=20)
 plt.axis('equal')
 plt.axis([-4, 3, -4, 3])
-
+# plt.show()
 # Project the data onto K = 1 dimension
 K = 1
 Z = pd.project_data(X_norm, U, K)
@@ -85,7 +86,8 @@ print('(this value should be about [-1.047419 -1.047419])')
 plt.scatter(X_rec[:, 0], X_rec[:, 1], facecolors='none', edgecolors='r', s=20)
 for i in range(X_norm.shape[0]):
     rk.draw_line(X_norm[i], X_rec[i])
-
+plt.axis([-4, 3, -4, 3])
+plt.show()
 input('Program paused. Press ENTER to continue')
 
 # ===================== Part 4: Loading and Visualizing Face Data =====================
@@ -117,7 +119,7 @@ U, S = pca.pca(X_norm)
 
 # Visualize the top 36 eigenvectors found
 disp.display_data(U[:, 0:36].T)
-
+plt.show()
 input('Program paused. Press ENTER to continue')
 
 # ===================== Part 6: Dimension Reduction for Faces =====================
@@ -182,7 +184,7 @@ fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 ax.scatter(X[selected, 0], X[selected, 1], X[selected, 2], c=idx[selected].astype(np.float64), s=15, cmap=cm, vmin=0, vmax=K)
 plt.title('Pixel dataset plotted in 3D. Color shows centroid memberships')
-
+plt.show()
 input('Program paused. Press ENTER to continue')
 
 # ===================== Part 8(b): PCA for Visualization =====================
@@ -198,5 +200,5 @@ Z = pd.project_data(X_norm, U, 2)
 plt.figure()
 plt.scatter(Z[selected, 0], Z[selected, 1], c=idx[selected].astype(np.float64), s=15, cmap=cm)
 plt.title('Pixel dataset plotted in 2D, using PCA for dimensionality reduction')
-
+plt.show()
 input('ex7_pca Finished. Press ENTER to exit')

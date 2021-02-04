@@ -6,9 +6,6 @@ import plotData as pd
 import visualizeBoundary as vb
 import gaussianKernel as gk
 
-plt.ion()
-np.set_printoptions(formatter={'float': '{: 0.6f}'.format})
-
 # ===================== Part 1: Loading and Visualizing Data =====================
 # We start the exercise by first loading and visualizing the dataset.
 # The following code will load the dataset into your environment and
@@ -22,8 +19,9 @@ X = data['X']
 y = data['y'].flatten()
 m = y.size
 
+
 # Plot training data
-pd.plot_data(X, y)
+# pd.plot_data(X, y)
 
 input('Program paused. Press ENTER to continue')
 
@@ -32,24 +30,29 @@ input('Program paused. Press ENTER to continue')
 # decision boundary learned
 #
 
+
 print('Training Linear SVM')
 
 # You should try to change the C value below and see how the decision
 # boundary varies (e.g., try C = 1000)
 
-c = 1000
-clf = svm.SVC(c, kernel='linear', tol=1e-3)
-clf.fit(X, y)
+c = 1  # just right
+c = 100  # overfiting
 
-pd.plot_data(X, y)
-vb.visualize_boundary(clf, X, 0, 4.5, 1.5, 5)
 
-input('Program paused. Press ENTER to continue')
+def test_svm():
+    clf = svm.SVC(C=c, kernel='linear', tol=1e-3)
+    clf.fit(X, y)
+    pd.plot_data(X, y)
+    vb.visualize_boundary(clf, X, 0, 4.5, 1.5, 5)
+    plt.show()
+    input('Program paused. Press ENTER to continue')
 
 # ===================== Part 3: Implementing Gaussian Kernel =====================
 # You will now implement the Gaussian kernel to use
 # with the SVM. You should now complete the code in gaussianKernel.py
 #
+
 
 print('Evaluating the Gaussian Kernel')
 
@@ -78,7 +81,7 @@ m = y.size
 
 # Plot training data
 pd.plot_data(X, y)
-
+# plt.show()
 input('Program paused. Press ENTER to continue')
 
 # ===================== Part 5: Training SVM with RBF Kernel (Dataset 2) =====================
@@ -102,8 +105,9 @@ def gaussian_kernel(x_1, x_2):
 
     return result
 
+
 # clf = svm.SVC(c, kernel=gaussian_kernel)
-clf = svm.SVC(c, kernel='rbf', gamma=np.power(sigma, -2))
+clf = svm.SVC(C=c, kernel='rbf', gamma=np.power(sigma, -2))
 clf.fit(X, y)
 
 print('Training complete!')
@@ -124,19 +128,32 @@ print('Loading and Visualizing Data ...')
 data = scio.loadmat('ex6data3.mat')
 X = data['X']
 y = data['y'].flatten()
-m = y.size
+Xval = data['Xval']
+yval = data['yval'].flatten()
 
 # Plot training data
 pd.plot_data(X, y)
 
 input('Program paused. Press ENTER to continue')
 
+
 # ===================== Part 7: Visualizing Dataset 3 =====================
+cand = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30]
+combination = [(c, s) for c in cand for s in cand]
 
-clf = svm.SVC(c, kernel='rbf', gamma=np.power(sigma, -2))
+
+def search_parameters(X, y, Xval, yval, comb):
+    search = []
+    for s, c in comb:
+        clf = svm.SVC(C=c, kernel='rbf', gamma=s)
+        clf.fit(X, y)
+        search.append(clf.score(Xval, yval))
+    return comb[np.argmax(search)]
+
+
+c, s = search_parameters(X, y, Xval, yval, combination)
+clf = svm.SVC(C=c, kernel='rbf', gamma=s)
 clf.fit(X, y)
-
-pd.plot_data(X, y)
 vb.visualize_boundary(clf, X, -.5, .3, -.8, .6)
-
+plt.show()
 input('ex6 Finished. Press ENTER to exit')

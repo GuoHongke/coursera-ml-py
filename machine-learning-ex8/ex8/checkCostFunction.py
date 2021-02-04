@@ -1,5 +1,6 @@
 import numpy as np
 import cofiCostFunction as ccf
+import computeNumericalGradient as cng
 
 
 def check_cost_function(lmd):
@@ -21,12 +22,16 @@ def check_cost_function(lmd):
     num_movies = Y.shape[0]  #4
     num_features = theta_t.shape[1] #3
 
+    print(x.shape, Y.shape, R.shape, theta.shape)
+
     def cost_func(p):
-        return ccf.cofi_cost_function(p, Y, R, num_users, num_movies, num_features, lmd)
+        cost_tmp = ccf.cofi_cost_function(p, Y, R, num_users, num_movies, num_features, lmd)
+        gred_tmp = ccf.cofi_gred_function(p, Y, R, num_users, num_movies, num_features, lmd)
+        return cost_tmp, gred_tmp
 
     numgrad = cng.compute_numerial_gradient(cost_func, np.concatenate((x.flatten(), theta.flatten())))
 
-    cost, grad = ccf.cofi_cost_function(np.concatenate((x.flatten(), theta.flatten())), Y, R, num_users, num_movies, num_features, lmd)
+    cost, grad = cost_func(np.concatenate((x.flatten(), theta.flatten())))
 
     print(np.c_[numgrad, grad])
     print('The above two columns you get should be very similar.\n'

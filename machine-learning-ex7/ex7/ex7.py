@@ -80,7 +80,8 @@ initial_centroids = np.array([[3, 3], [6, 2], [8, 5]])
 
 # Run K-Means algorithm. The 'true' at the end tells our function to plot
 # the progress of K-Means
-centroids, idx = km.run_kmeans(X, initial_centroids, max_iters, True)
+# centroids, idx = km.run_kmeans(X, initial_centroids, max_iters, True)
+# plt.show()
 print('K-Means Done.')
 
 input('Program paused. Press ENTER to continue')
@@ -100,7 +101,7 @@ image = img_as_float(image)
 
 # Size of the image
 img_shape = image.shape
-
+print('Image shape {}'.format(img_shape))
 # Reshape the image into an Nx3 matrix where N = number of pixels.
 # Each row will contain the Red, Green and Blue pixel values
 # This gives us our dataset matrix X that we will use K-Means on.
@@ -119,6 +120,7 @@ initial_centroids = kmic.kmeans_init_centroids(X, K)
 
 # Run K-Means
 centroids, idx = km.run_kmeans(X, initial_centroids, max_iters, False)
+# plt.show()
 print('K-Means Done.')
 
 input('Program paused. Press ENTER to continue')
@@ -137,11 +139,11 @@ idx = fc.find_closest_centroids(X, centroids)
 
 # We can now recover the image from the indices (idx) by mapping each pixel
 # (specified by its index in idx) to the centroid value
-X_recovered = centroids[idx]
+X_recovered = centroids[[int(i) for i in idx], :]
 
 # Reshape the recovered image into proper dimensions
 X_recovered = np.reshape(X_recovered, (img_shape[0], img_shape[1], 3))
-
+print(X_recovered)
 plt.subplot(2, 1, 1)
 plt.imshow(image)
 plt.title('Original')

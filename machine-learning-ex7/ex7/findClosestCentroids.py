@@ -18,6 +18,8 @@ def find_closest_centroids(X, centroids):
     #                range 0..k
     #
 
+    for i in range(m):
+        idx[i] = np.argmin(np.sum(np.power(X[i:i+1, :] - centroids, 2), axis=1))
 
     # ==========================================================
 

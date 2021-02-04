@@ -4,9 +4,9 @@ import nltk, nltk.stem.porter
 
 
 def process_email(email_contents):
-    vocab_list = get_vocab_list()
+    vocab_list = get_vocab_dict()
 
-    word_indices = np.array([], dtype=np.int64)
+    word_indices = []
 
     # ===================== Preprocess Email =====================
 
@@ -55,8 +55,8 @@ def process_email(email_contents):
         #                look up the vocabulary list the find where in vocab_list
         #                'action' appears. For example, if vocab_list[18] == 'action'
         #                then you should add 18 to the word_indices array.
-
-
+        if token in vocab_list:
+            word_indices.append(vocab_list[token])
 
         # ==========================================================
 
@@ -64,14 +64,14 @@ def process_email(email_contents):
 
     print('==================')
 
-    return word_indices
+    return np.array(word_indices)
 
 
-def get_vocab_list():
+def get_vocab_dict():
     vocab_dict = {}
     with open('vocab.txt') as f:
         for line in f:
             (val, key) = line.split()
-            vocab_dict[int(val)] = key
+            vocab_dict[key] = int(val)
 
     return vocab_dict

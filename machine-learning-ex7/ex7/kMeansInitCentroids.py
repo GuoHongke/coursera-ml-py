@@ -9,7 +9,7 @@ def kmeans_init_centroids(X, K):
     # Instructions: You should set centroids to randomly chosen examples from
     #               the dataset X
     #
-
+    centroids = np.random.permutation(X)[:K, :]
 
     # ==========================================================
 

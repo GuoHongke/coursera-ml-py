@@ -14,8 +14,10 @@ def compute_centroids(X, idx, K):
     #               should contain the mean of the data points assigned to
     #               centroid i.
     #
-
-
+    for i in range(K):
+        idx_i = [index for index in range(m) if idx[index] == i]
+        X_i = X[idx_i, :]
+        centroids[i] = np.sum(X_i, axis=0) / float(len(idx_i))
     # ==========================================================
 
     return centroids

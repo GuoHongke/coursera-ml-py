@@ -1,4 +1,5 @@
 import numpy as np
+from cofiCostFunction import cofi_cost_function, cofi_gred_function
 
 
 def compute_numerial_gradient(cost_func, theta):

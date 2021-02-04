@@ -6,8 +6,6 @@ def estimate_gaussian(X):
     m, n = X.shape
 
     # You should return these values correctly
-    mu = np.zeros(n)
-    sigma2 = np.zeros(n)
 
     # ===================== Your Code Here =====================
     # Instructions: Compute the mean of the data and the variances
@@ -15,8 +13,8 @@ def estimate_gaussian(X):
     #               the data for the i-th feature and sigma2[i]
     #               should contain variance of the i-th feature
     #
-
-
+    mu = np.mean(X, axis=0)
+    sigma2 = np.cov(X.T)
     # ==========================================================
 
     return mu, sigma2

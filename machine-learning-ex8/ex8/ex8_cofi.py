@@ -31,12 +31,12 @@ R = data['R']
 print('Average ratings for movie 0(Toy Story): {:0.6f}/5'.format(np.mean(Y[0, np.where(R[0] == 1)])))
 
 # We can visualize the ratings matrix by plotting it with plt.imshow
-plt.figure()
-plt.imshow(Y)
-plt.colorbar()
-plt.xlabel('Users')
-plt.ylabel('Movies')
-
+# plt.figure()
+# plt.imshow(Y)
+# plt.colorbar()
+# plt.xlabel('Users')
+# plt.ylabel('Movies')
+# plt.show()
 input('Program paused. Press ENTER to continue')
 
 # ===================== Part 2: Collaborative Filtering Cost function =====================
@@ -64,7 +64,8 @@ Y = Y[0:num_movies, 0:num_users]
 R = R[0:num_movies, 0:num_users]
 
 # Evaluate cost function
-cost, grad = ccf.cofi_cost_function(np.concatenate((X.flatten(), theta.flatten())), Y, R, num_users, num_movies, num_features, 0)
+cost = ccf.cofi_cost_function(np.concatenate((X.flatten(), theta.flatten())), Y, R, num_users, num_movies, num_features, 0)
+grad = ccf.cofi_gred_function(np.concatenate((X.flatten(), theta.flatten())), Y, R, num_users, num_movies, num_features, 0)
 
 print('Cost at loaded parameters: {:0.2f}\n(this value should be about 22.22)'.format(cost))
 
@@ -89,7 +90,7 @@ input('Program paused. Press ENTER to continue')
 #
 
 # Evaluate cost function
-cost, _ = ccf.cofi_cost_function(np.concatenate((X.flatten(), theta.flatten())), Y, R, num_users, num_movies, num_features, 1.5)
+cost = ccf.cofi_cost_function(np.concatenate((X.flatten(), theta.flatten())), Y, R, num_users, num_movies, num_features, 1.5)
 
 print('Cost at loaded parameters (lambda = 1.5): {:0.2f}\n'
       '(this value should be about 31.34)'.format(cost))
@@ -170,7 +171,6 @@ R = np.c_[(my_ratings != 0), R]
 
 # Normalize Ratings
 Ynorm, Ymean = nr.normalize_ratings(Y, R)
-
 # Useful values
 num_users = Y.shape[1]
 num_movies = Y.shape[0]
@@ -185,16 +185,11 @@ initial_params = np.concatenate([X.flatten(), theta.flatten()])
 lmd = 10
 
 
-def cost_func(p):
-    return ccf.cofi_cost_function(p, Ynorm, R, num_users, num_movies, num_features, lmd)[0]
-
-
-def grad_func(p):
-    return ccf.cofi_cost_function(p, Ynorm, R, num_users, num_movies, num_features, lmd)[1]
-
-theta, *unused = opt.fmin_cg(cost_func, fprime=grad_func, x0=initial_params, maxiter=100, disp=False, full_output=True)
+res = opt.minimize(ccf.cofi_cost_function, initial_params, args=(Y, R, num_users, num_movies, num_features, lmd),
+                   method='TNC', jac=ccf.cofi_gred_function)
 
 # Unfold the returned theta back into U and W
+theta = res.x
 X = theta[0:num_movies * num_features].reshape((num_movies, num_features))
 theta = theta[num_movies * num_features:].reshape((num_users, num_features))
 
@@ -208,8 +203,8 @@ input('Program paused. Press ENTER to continue')
 # the predictions matrix.
 #
 p = np.dot(X, theta.T)
-my_predictions = p[:, 0] + Ymean
-
+my_predictions = p[:, 0].flatten() + Ymean
+print(my_predictions)
 indices = np.argsort(my_predictions)[::-1]
 print('\nTop recommendations for you:')
 for i in range(10):

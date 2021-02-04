@@ -52,12 +52,12 @@ input('Program paused. Press ENTER to continue')
 data = scio.loadmat('spamTrain.mat')
 X = data['X']
 y = data['y'].flatten()
-
+print(X.shape, y.shape)
 print('Training Linear SVM (Spam Classification)')
 print('(this may take 1 to 2 minutes)')
 
 c = 0.1
-clf = svm.SVC(c, kernel='linear')
+clf = svm.SVC(C=c, kernel='linear')
 clf.fit(X, y)
 
 p = clf.predict(X)
@@ -72,7 +72,7 @@ print('Training Accuracy: {}'.format(np.mean(p == y) * 100))
 data = scio.loadmat('spamTest.mat')
 Xtest = data['Xtest']
 ytest = data['ytest'].flatten()
-
+print(Xtest.shape, ytest.shape)
 print('Evaluating the trained linear SVM on a test set ...')
 
 p = clf.predict(Xtest)
@@ -89,11 +89,12 @@ input('Program paused. Press ENTER to continue')
 # 'thinks' that these words are the most likely indicators of spam.
 #
 
-vocab_list = pe.get_vocab_list()
+vocab_dict = pe.get_vocab_dict()
+vocab_list = {v: k for k, v in vocab_dict.items()}
 indices = np.argsort(clf.coef_).flatten()[::-1]
 print(indices)
 
 for i in range(15):
-    print('{} ({:0.6f})'.format(vocab_list[indices[i]], clf.coef_.flatten()[indices[i]]))
+    print('{} ({:0.6f})'.format(vocab_list[indices[i]+1], clf.coef_.flatten()[indices[i]]))
 
 input('ex6_spam Finished. Press ENTER to exit')

@@ -1,5 +1,5 @@
 import numpy as np
-import scipy
+from scipy import linalg
 
 
 def pca(X):
@@ -21,7 +21,8 @@ def pca(X):
     # Hint: Take a look at full_matrices, compute_uv parameters for the svd function
     #
     
-
+    Sigma = X.T @ X / m
+    U, S, V = linalg.svd(Sigma)
     # ==========================================================
 
     return U, S
